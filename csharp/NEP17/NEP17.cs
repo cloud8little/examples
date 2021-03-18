@@ -15,7 +15,7 @@ namespace Neo.SmartContract.Examples
         #region Token Settings
         static readonly ulong MaxSupply = 10_000_000_000_000_000;
         static readonly ulong InitialSupply = 2_000_000_000_000_000;
-        static readonly UInt160 Owner = "NiNmXL8FjEUEs1nfX9uHFBNaenxDHJtmuB".ToScriptHash();
+        static readonly UInt160 Owner = "NeBB1QePvNFvQtyu5F4J63fzbAUuGMj1Vd".ToScriptHash();
         static readonly ulong TokensPerNEO = 1_000_000_000;
         static readonly ulong TokensPerGAS = 1;
         #endregion
