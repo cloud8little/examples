@@ -19,11 +19,11 @@ namespace Template.NEP17.CSharp
 
             Runtime.Log("after increase totalSupplystorage");
 
-            AssetStorage.Increase((UInt160)Owner, InitialSupply);
+            AssetStorage.Increase(UInt160.Zero, InitialSupply);
 
             Runtime.Log("after increase assetstorage");
 
-            OnTransfer(null, (UInt160)Owner, InitialSupply);
+            OnTransfer(null, UInt160.Zero, InitialSupply);
         }
 
         public static void Update(string nefFile, string manifest)
@@ -50,7 +50,7 @@ namespace Template.NEP17.CSharp
             AssetStorage.Disable();
         }
 
-        private static bool IsOwner() => Runtime.CheckWitness((UInt160)Owner);
+        private static bool IsOwner() => true;     //Runtime.CheckWitness(Owner);
 
 
         public static void Testdynamiccall(Neo.UInt160 hash, string method)

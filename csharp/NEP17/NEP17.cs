@@ -20,7 +20,8 @@ namespace Template.NEP17.CSharp
         static readonly ulong InitialSupply = 2_000_000_001_000_001;
         //static readonly ulong InitialSupply = 2000_000_000_000_000_000;
         //static readonly UInt160 Owner = (byte[])"NXV7ZhHiyM1aHXwpVsRZC6BwNFP2jghXAq".ToScriptHash();
-        static readonly byte[] Owner = Helper.ToByteArray("NXV7ZhHiyM1aHXwpVsRZC6BwNFP2jghXAq");
+        //static readonly byte[] Owner = Helper.ToByteArray("NXV7ZhHiyM1aHXwpVsRZC6BwNFP2jghXAq");
+        //static readonly UInt160 Owner = (UInt160)(ByteString)("NXV7ZhHiyM1aHXwpVsRZC6BwNFP2jghXAq");
         static readonly ulong TokensPerNEO = 2_000_000_000;
         //static readonly ulong TokensPerNEO = 20_000_000_000_000_000;
         static readonly ulong TokensPerGAS = 1;
@@ -34,7 +35,8 @@ namespace Template.NEP17.CSharp
         // When this contract address is included in the transaction signature,
         // this method will be triggered as a VerificationTrigger to verify that the signature is correct.
         // For example, this method needs to be called when withdrawing token from the contract.
-        public static bool Verify() => IsOwner();
+        //public static bool Verify() => IsOwner();
+        public static bool Verify() => true;
 
         public static string Symbol() => "NewCompiler";
 
