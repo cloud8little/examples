@@ -1,7 +1,8 @@
-using Neo.SmartContract.Framework.Services.Neo;
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Services;
 using System.Numerics;
 
-namespace Neo.SmartContract.Examples
+namespace Template.NEP17.CSharp
 {
     public static class TotalSupplyStorage
     {
@@ -17,8 +18,11 @@ namespace Neo.SmartContract.Examples
 
         public static BigInteger Get()
         {
-            var value = Storage.CurrentContext.CreateMap(mapName).Get(key);
-            return value is null ? 0 : (BigInteger)value;
+            ByteString totaSupply = Storage.CurrentContext.CreateMap(mapName).Get(key);
+            if (totaSupply == null) return 0;
+            //return BigInteger.Parse(totaSupply);
+            return (BigInteger)totaSupply;
         }
+
     }
 }

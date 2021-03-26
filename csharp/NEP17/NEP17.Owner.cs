@@ -1,26 +1,35 @@
 using Neo.SmartContract.Framework;
-using Neo.SmartContract.Framework.Services.Neo;
+using Neo.SmartContract.Framework.Services;
+using Neo.SmartContract.Framework.Native;
 using System;
+using Neo;
 
-namespace Neo.SmartContract.Examples
+namespace Template.NEP17.CSharp
 {
-    partial class NEP17Demo
+    public partial class NEP17 : SmartContract
     {
-        public static void _deploy(object data, bool update)
+        public static void _deploy(object data,bool update)
         {
             if (update) return;
+
             if (TotalSupplyStorage.Get() > 0) throw new Exception("Contract has been deployed.");
-
+            Runtime.Log("after get totalSupplyStorage");
+            
             TotalSupplyStorage.Increase(InitialSupply);
-            AssetStorage.Increase(Owner, InitialSupply);
 
-            OnTransfer(null, Owner, InitialSupply);
+            Runtime.Log("after increase totalSupplystorage");
+
+            AssetStorage.Increase((UInt160)Owner, InitialSupply);
+
+            Runtime.Log("after increase assetstorage");
+
+            OnTransfer(null, (UInt160)Owner, InitialSupply);
         }
 
-        public static void Update(ByteString nefFile, string manifest, object data)
+        public static void Update(string nefFile, string manifest)
         {
             if (!IsOwner()) throw new Exception("No authorization.");
-            ContractManagement.Update(nefFile, manifest, data);
+            ContractManagement.Update(nefFile, manifest, null);
         }
 
         public static void Destroy()
@@ -41,6 +50,12 @@ namespace Neo.SmartContract.Examples
             AssetStorage.Disable();
         }
 
-        private static bool IsOwner() => Runtime.CheckWitness(Owner);
+        private static bool IsOwner() => Runtime.CheckWitness((UInt160)Owner);
+
+
+        public static void Testdynamiccall(Neo.UInt160 hash, string method)
+        {
+            Contract.Call(hash, method, CallFlags.All, new object[] { });
+        }
     }
 }

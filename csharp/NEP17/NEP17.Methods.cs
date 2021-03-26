@@ -1,20 +1,27 @@
-using Neo.SmartContract.Framework.Services.Neo;
-using Neo.SmartContract.Framework.Services.System;
+using Neo;
+using Neo.SmartContract.Framework;
+using Neo.SmartContract.Framework.Services;
 using System;
 using System.Numerics;
 
-namespace Neo.SmartContract.Examples
+namespace Template.NEP17.CSharp
 {
-    partial class NEP17Demo
+    public partial class NEP17 : SmartContract
     {
         public static BigInteger TotalSupply() => TotalSupplyStorage.Get();
 
-        public static BigInteger BalanceOf(UInt160 account) => AssetStorage.Get(account);
+        public static BigInteger BalanceOf(UInt160 account)
+        {
+            if (!ValidateAddress(account)) throw new Exception("The parameters account SHOULD be a 20-byte non-zero address.");
+            Runtime.Log("valid address complete");
+            return AssetStorage.Get(account);
+        }
 
         public static bool Transfer(UInt160 from, UInt160 to, BigInteger amount, object data)
         {
+            if (!ValidateAddress(from) || !ValidateAddress(to)) throw new Exception("The parameters from and to SHOULD be 20-byte non-zero addresses.");
             if (amount <= 0) throw new Exception("The parameter amount MUST be greater than 0.");
-            if (!Runtime.CheckWitness(from) && !from.Equals(ExecutionEngine.CallingScriptHash)) throw new Exception("No authorization.");
+            if (!Runtime.CheckWitness(from) && !from.Equals(Runtime.CallingScriptHash)) throw new Exception("No authorization.");
             if (AssetStorage.Get(from) < amount) throw new Exception("Insufficient balance.");
             if (from == to) return true;
 
@@ -24,8 +31,7 @@ namespace Neo.SmartContract.Examples
             OnTransfer(from, to, amount);
 
             // Validate payable
-            if (ContractManagement.GetContract(to) != null)
-                Contract.Call(to, "onNEP17Payment", CallFlags.All, new object[] { from, amount, data });
+            if (IsDeployed(to)) Contract.Call(to, "onNEP17Payment", CallFlags.All ,new object[] { from, amount, data });
             return true;
         }
     }

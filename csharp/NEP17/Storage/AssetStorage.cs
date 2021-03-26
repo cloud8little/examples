@@ -1,7 +1,10 @@
-using Neo.SmartContract.Framework.Services.Neo;
+using Neo;
+using Neo.SmartContract.Framework;
 using System.Numerics;
+using Neo.SmartContract.Framework.Services;
+using Neo.SmartContract.Framework.Native;
 
-namespace Neo.SmartContract.Examples
+namespace Template.NEP17.CSharp
 {
     public static class AssetStorage
     {
@@ -26,11 +29,20 @@ namespace Neo.SmartContract.Examples
 
         public static BigInteger Get(UInt160 key)
         {
-            var value = Storage.CurrentContext.CreateMap(mapName).Get(key);
-            return value is null ? 0 : (BigInteger)value;
+            //ByteString status = Storage.CurrentContext.CreateMap(mapName).Get((ByteString)((byte[])key));
+            ByteString status = Storage.CurrentContext.CreateMap(mapName).Get(key);
+            Runtime.Log("check if status is null");
+            if (status == null) return 0;
+            else
+            {
+                Runtime.Log(StdLib.Itoa((BigInteger)status));
+                return (BigInteger)status;
+            }
         }
-
-        public static bool GetPaymentStatus() => ((BigInteger) Storage.CurrentContext.CreateMap(mapName).Get("enable")).Equals(1);
+        public static bool GetPaymentStatus()
+        {
+            return ((BigInteger)(Storage.CurrentContext.CreateMap(mapName).Get("enable"))).Equals(1);
+        }
 
         public static void Remove(UInt160 key) => Storage.CurrentContext.CreateMap(mapName).Delete(key);
     }
